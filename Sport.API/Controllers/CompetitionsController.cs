@@ -34,6 +34,30 @@ public class CompetitionsController : Controller
         return Ok(competition);
     }
 
+    [HttpGet("get-by-date/{date}")]
+    public async Task<IActionResult> GetCompetitionsByDate(string date)
+    {
+        var competitions = await _context.Competitions.Where(c => c.Date == DateTime.Parse(date)).ToListAsync();
+        if (competitions.Count == 0)
+        {
+            return NotFound();
+        }
+        
+        return Ok(competitions);
+    }
+
+    [HttpGet("get-by-location/{location}")]
+    public async Task<IActionResult> GetCompetitionsByLocation(string location)
+    {
+        var competitions = await _context.Competitions.Where(c => c.Location == location).ToListAsync();
+        if (competitions.Count == 0)
+        {
+            return NotFound();
+        }
+        
+        return Ok(competitions);
+    }
+
     [HttpPost]
     public async Task<IActionResult> PostCompetition(Competition competition)
     {
