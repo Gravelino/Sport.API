@@ -1,0 +1,6 @@
+﻿services:
+  sport.api:
+    image: sport.api
+    build:
+      context: .
+      dockerfile: Sport.API/Dockerfile
