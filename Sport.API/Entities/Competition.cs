@@ -6,5 +6,5 @@ public class Competition
     public string Title { get; set; }
     public DateTime Date { get; set; }
     public string Location { get; set; }
-    public List<Participant> Participants { get; set; } = new();
+    public List<Participant> Participants { get; set; }
 }
