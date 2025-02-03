@@ -12,7 +12,7 @@ public class SportDbContext : DbContext
 
     public DbSet<Participant> Participants { get; set; }
     public DbSet<Competition> Competitions { get; set; }
-    
+    public DbSet<ParticipantCompetition> ParticipantCompetitions { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

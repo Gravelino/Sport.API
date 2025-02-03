@@ -22,6 +22,21 @@ namespace Sport.API.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("CompetitionParticipant", b =>
+                {
+                    b.Property<int>("CompetitionsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ParticipantsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CompetitionsId", "ParticipantsId");
+
+                    b.HasIndex("ParticipantsId");
+
+                    b.ToTable("CompetitionParticipant");
+                });
+
             modelBuilder.Entity("Sport.API.Entities.Competition", b =>
                 {
                     b.Property<int>("Id")
@@ -57,41 +72,35 @@ namespace Sport.API.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CompetitionId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<double?>("Result")
-                        .HasColumnType("double precision");
 
                     b.Property<string>("Team")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.Property<double?>("TotalScore")
+                        .HasColumnType("double precision");
 
-                    b.HasIndex("CompetitionId");
+                    b.HasKey("Id");
 
                     b.ToTable("Participants");
                 });
 
-            modelBuilder.Entity("Sport.API.Entities.Participant", b =>
+            modelBuilder.Entity("CompetitionParticipant", b =>
                 {
-                    b.HasOne("Sport.API.Entities.Competition", "Competition")
-                        .WithMany("Participants")
-                        .HasForeignKey("CompetitionId")
+                    b.HasOne("Sport.API.Entities.Competition", null)
+                        .WithMany()
+                        .HasForeignKey("CompetitionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Competition");
-                });
-
-            modelBuilder.Entity("Sport.API.Entities.Competition", b =>
-                {
-                    b.Navigation("Participants");
+                    b.HasOne("Sport.API.Entities.Participant", null)
+                        .WithMany()
+                        .HasForeignKey("ParticipantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
