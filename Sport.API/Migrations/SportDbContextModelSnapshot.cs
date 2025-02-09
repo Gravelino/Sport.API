@@ -45,12 +45,18 @@ namespace Sport.API.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("RegistrationDeadline")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -80,12 +86,38 @@ namespace Sport.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<double?>("TotalScore")
-                        .HasColumnType("double precision");
+                    b.Property<int>("TotalScore")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.ToTable("Participants");
+                });
+
+            modelBuilder.Entity("Sport.API.Entities.ParticipantCompetition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CompetitionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ParticipantId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ParticipantScore")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompetitionId");
+
+                    b.HasIndex("ParticipantId");
+
+                    b.ToTable("ParticipantCompetitions");
                 });
 
             modelBuilder.Entity("CompetitionParticipant", b =>
@@ -101,6 +133,25 @@ namespace Sport.API.Migrations
                         .HasForeignKey("ParticipantsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Sport.API.Entities.ParticipantCompetition", b =>
+                {
+                    b.HasOne("Sport.API.Entities.Competition", "Competition")
+                        .WithMany()
+                        .HasForeignKey("CompetitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Sport.API.Entities.Participant", "Participant")
+                        .WithMany()
+                        .HasForeignKey("ParticipantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Competition");
+
+                    b.Navigation("Participant");
                 });
 #pragma warning restore 612, 618
         }

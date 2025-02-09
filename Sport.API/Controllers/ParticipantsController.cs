@@ -14,7 +14,7 @@ public class ParticipantsController : Controller
     {
         _context = context;
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetAllParticipants()
     {
@@ -30,16 +30,16 @@ public class ParticipantsController : Controller
         {
             return NotFound();
         }
-        
+
         return Ok(participant);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddParticipant( Participant participant)
+    public async Task<IActionResult> AddParticipant(Participant participant)
     {
         await _context.Participants.AddAsync(participant);
         await _context.SaveChangesAsync();
-        
+
         return CreatedAtAction(nameof(GetParticipantById), new { id = participant.Id }, participant);
     }
 
@@ -55,10 +55,10 @@ public class ParticipantsController : Controller
         {
             return NotFound();
         }
-        
+
         _context.Entry(participant).State = EntityState.Modified;
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
 
@@ -70,10 +70,27 @@ public class ParticipantsController : Controller
         {
             return NotFound();
         }
-        
+
         _context.Participants.Remove(participant);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
+    }
+
+    [HttpGet("{participantId}/scores")]
+    public async Task<IActionResult> GetParticipantScores(int participantId)
+    {
+        var participant = await _context.Participants.FindAsync(participantId);
+        if (participant == null)
+        {
+            return NotFound("Participant not found");
+        }
+        
+        var scores = await _context.ParticipantCompetitions
+            .Where(pc => pc.ParticipantId == participantId)
+            .Include(pc => pc.Competition)
+            .ToListAsync();
+        
+        return Ok(scores);
     }
 }
