@@ -26,6 +26,15 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+#region Config. CORS
+
+app.UseCors(options => options
+   .AllowAnyOrigin()
+   .AllowAnyMethod()
+   .AllowAnyHeader());
+
+#endregion
+
 app.MapControllers();
 
 app.Run();
